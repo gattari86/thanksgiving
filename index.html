@@ -404,6 +404,186 @@
             opacity: 0.95;
         }
 
+        /* Music Player Styles */
+        .music-player {
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+            padding: 20px 25px;
+            border-radius: 12px;
+            border-left: 5px solid var(--golden-orange);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .music-player:hover {
+            box-shadow: 0 6px 25px rgba(207, 135, 65, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .player-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            color: var(--olive-green);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .player-title i {
+            color: var(--golden-orange);
+            font-size: 1rem;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .play-button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--warm-tan) 0%, var(--golden-orange) 100%);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(207, 135, 65, 0.3);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(207, 135, 65, 0.4);
+        }
+
+        .play-button:active {
+            transform: scale(0.95);
+        }
+
+        .play-button i {
+            color: white;
+            font-size: 1.1rem;
+            margin-left: 2px;
+        }
+
+        .play-button.playing i {
+            margin-left: 0;
+        }
+
+        .progress-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar:hover {
+            height: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--golden-orange), var(--terra-cotta));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.1s linear;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid var(--golden-orange);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .progress-bar:hover .progress-fill::after {
+            opacity: 1;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--dark-brown);
+            opacity: 0.7;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .volume-button {
+            background: none;
+            border: none;
+            color: var(--olive-green);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .volume-button:hover {
+            color: var(--golden-orange);
+        }
+
+        .volume-slider {
+            width: 70px;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            appearance: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--golden-orange);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: var(--golden-orange);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
             .icon-header svg {
@@ -459,6 +639,14 @@
 
             .location {
                 font-size: 1.2rem;
+            }
+
+            .music-player {
+                padding: 18px 20px;
+            }
+
+            .volume-slider {
+                width: 60px;
             }
         }
 
@@ -557,6 +745,36 @@
             .footer-text {
                 font-size: 1.1rem;
             }
+
+            .music-player {
+                padding: 15px 18px;
+            }
+
+            .play-button {
+                width: 40px;
+                height: 40px;
+            }
+
+            .play-button i {
+                font-size: 1rem;
+            }
+
+            .player-title {
+                font-size: 0.85rem;
+                margin-bottom: 12px;
+            }
+
+            .volume-control {
+                display: none;
+            }
+
+            .progress-container {
+                gap: 6px;
+            }
+
+            .time-display {
+                font-size: 0.7rem;
+            }
         }
 
         @media (max-width: 400px) {
@@ -602,6 +820,38 @@
                 <div class="info-block">
                     <div class="location">Lakeside Landing Patio</div>
                     <div class="location-detail">Elyson Community</div>
+                </div>
+
+                <!-- Music Player -->
+                <div class="music-player">
+                    <div class="player-title">
+                        <i class="fa-solid fa-music"></i>
+                        Friendsgiving Vibes
+                    </div>
+                    <div class="player-controls">
+                        <button class="play-button" id="playButton" aria-label="Play music">
+                            <i class="fa-solid fa-play"></i>
+                        </button>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progressBar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="time-display">
+                                <span id="currentTime">0:00</span>
+                                <span id="duration">0:00</span>
+                            </div>
+                        </div>
+                        <div class="volume-control">
+                            <button class="volume-button" id="volumeButton" aria-label="Mute/Unmute">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </button>
+                            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
+                        </div>
+                    </div>
+                    <audio id="audioPlayer" preload="metadata">
+                        <source src="friendsgiving-song.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
                 </div>
             </div>
 
@@ -695,5 +945,104 @@
             <div class="footer-text">See you there!</div>
         </div>
     </div>
+
+    <script>
+        // Music Player Functionality
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playButton = document.getElementById('playButton');
+        const playIcon = playButton.querySelector('i');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const volumeButton = document.getElementById('volumeButton');
+        const volumeIcon = volumeButton.querySelector('i');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        // Set initial volume
+        audioPlayer.volume = 0.7;
+
+        // Format time helper
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Play/Pause toggle
+        playButton.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+                playButton.classList.add('playing');
+            } else {
+                audioPlayer.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+                playButton.classList.remove('playing');
+            }
+        });
+
+        // Update duration when metadata loads
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(audioPlayer.duration);
+        });
+
+        // Update progress bar and time
+        audioPlayer.addEventListener('timeupdate', () => {
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressFill.style.width = `${progress}%`;
+            currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+        });
+
+        // Seek functionality
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        });
+
+        // Volume control
+        volumeSlider.addEventListener('input', (e) => {
+            const volume = e.target.value / 100;
+            audioPlayer.volume = volume;
+            updateVolumeIcon(volume);
+        });
+
+        volumeButton.addEventListener('click', () => {
+            if (audioPlayer.volume > 0) {
+                audioPlayer.dataset.prevVolume = audioPlayer.volume;
+                audioPlayer.volume = 0;
+                volumeSlider.value = 0;
+                updateVolumeIcon(0);
+            } else {
+                const prevVolume = audioPlayer.dataset.prevVolume || 0.7;
+                audioPlayer.volume = prevVolume;
+                volumeSlider.value = prevVolume * 100;
+                updateVolumeIcon(prevVolume);
+            }
+        });
+
+        function updateVolumeIcon(volume) {
+            volumeIcon.classList.remove('fa-volume-high', 'fa-volume-low', 'fa-volume-xmark');
+            if (volume === 0) {
+                volumeIcon.classList.add('fa-volume-xmark');
+            } else if (volume < 0.5) {
+                volumeIcon.classList.add('fa-volume-low');
+            } else {
+                volumeIcon.classList.add('fa-volume-high');
+            }
+        }
+
+        // Reset play button when song ends
+        audioPlayer.addEventListener('ended', () => {
+            playIcon.classList.remove('fa-pause');
+            playIcon.classList.add('fa-play');
+            playButton.classList.remove('playing');
+            progressFill.style.width = '0%';
+            audioPlayer.currentTime = 0;
+        });
+    </script>
 </body>
 </html>
