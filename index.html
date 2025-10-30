@@ -405,25 +405,124 @@
         }
 
         /* Responsive design */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
+            .icon-header svg {
+                width: 40px;
+                height: 40px;
+            }
+
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .date {
+                font-size: 1.3rem;
+            }
+
+            .content {
+                padding: 40px 25px;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .section-title i {
+                font-size: 1.3rem;
+            }
+
+            .note-card {
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .note-icon {
+                width: 45px;
+                height: 45px;
+            }
+
+            .note-icon i {
+                font-size: 1.1rem;
+            }
+
+            .note-text {
+                font-size: 1rem;
+            }
+
+            .schedule-row td {
+                padding: 12px;
+            }
+
+            .info-block {
+                padding: 18px;
+            }
+
+            .location {
                 font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .icon-header {
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+
+            .icon-header svg {
+                width: 35px;
+                height: 35px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                letter-spacing: 1px;
+            }
+
+            .date {
+                font-size: 1.1rem;
+            }
+
+            .header {
+                padding: 40px 20px;
             }
 
             .content {
                 padding: 30px 20px;
             }
 
-            .section-title {
-                font-size: 1.4rem;
+            .section {
+                margin-bottom: 30px;
             }
 
-            .notes-grid {
-                grid-template-columns: 1fr;
+            .section-title {
+                font-size: 1.3rem;
+                gap: 10px;
+            }
+
+            .section-title i {
+                font-size: 1.2rem;
+            }
+
+            .note-card {
+                padding: 18px 15px;
+                gap: 12px;
+            }
+
+            .note-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .note-icon i {
+                font-size: 1rem;
+            }
+
+            .note-text {
+                font-size: 0.95rem;
             }
 
             .schedule-row td:first-child {
@@ -431,11 +530,51 @@
                 display: block;
                 border-right: none;
                 border-bottom: 2px solid var(--warm-tan);
+                padding-bottom: 10px;
             }
 
             .schedule-row td:last-child {
                 display: block;
                 width: 100%;
+                padding-top: 10px;
+            }
+
+            .bullet-list li {
+                font-size: 1rem;
+                padding-left: 30px;
+            }
+
+            .highlight-box {
+                font-size: 1rem;
+                padding: 20px;
+            }
+
+            .footer-icons i {
+                font-size: 1.6rem;
+                gap: 20px;
+            }
+
+            .footer-text {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .note-card {
+                padding: 15px 12px;
+            }
+
+            .note-icon {
+                width: 35px;
+                height: 35px;
+            }
+
+            .note-icon i {
+                font-size: 0.9rem;
             }
         }
     </style>
