@@ -404,184 +404,44 @@
             opacity: 0.95;
         }
 
-        /* Music Player Styles */
+        /* Music Player - Simple Floating Button */
         .music-player {
-            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
-            padding: 20px 25px;
-            border-radius: 12px;
-            border-left: 5px solid var(--golden-orange);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .music-player:hover {
-            box-shadow: 0 6px 25px rgba(207, 135, 65, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .player-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 0.95rem;
-            color: var(--olive-green);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .player-title i {
-            color: var(--golden-orange);
-            font-size: 1rem;
-        }
-
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .play-button {
-            width: 45px;
-            height: 45px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--golden-orange);
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--warm-tan) 0%, var(--golden-orange) 100%);
-            border: none;
+            width: 60px;
+            height: 60px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(207, 135, 65, 0.3);
-            transition: all 0.3s ease;
-            flex-shrink: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
         }
 
-        .play-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(207, 135, 65, 0.4);
+        .music-player:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 30px rgba(207, 135, 65, 0.3);
+            border-color: var(--burgundy);
         }
 
-        .play-button:active {
-            transform: scale(0.95);
-        }
-
-        .play-button i {
-            color: white;
-            font-size: 1.1rem;
-            margin-left: 2px;
-        }
-
-        .play-button.playing i {
-            margin-left: 0;
-        }
-
-        .progress-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .progress-bar:hover {
-            height: 8px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(to right, var(--golden-orange), var(--terra-cotta));
-            border-radius: 10px;
-            width: 0%;
-            transition: width 0.1s linear;
-            position: relative;
-        }
-
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            right: -6px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 12px;
-            height: 12px;
-            background: white;
-            border: 2px solid var(--golden-orange);
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .progress-bar:hover .progress-fill::after {
-            opacity: 1;
-        }
-
-        .time-display {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            color: var(--dark-brown);
-            opacity: 0.7;
-        }
-
-        .volume-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .volume-button {
-            background: none;
-            border: none;
-            color: var(--olive-green);
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 5px;
+        .music-icon {
+            font-size: 24px;
+            color: var(--golden-orange);
             transition: color 0.3s ease;
         }
 
-        .volume-button:hover {
-            color: var(--golden-orange);
+        .music-player:hover .music-icon {
+            color: var(--burgundy);
         }
 
-        .volume-slider {
-            width: 70px;
-            height: 4px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            appearance: none;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            background: var(--golden-orange);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .volume-slider::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
-            background: var(--golden-orange);
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        .music-icon.playing {
+            animation: pulse 1.5s ease-in-out infinite;
         }
 
         /* Responsive design */
@@ -642,11 +502,12 @@
             }
 
             .music-player {
-                padding: 18px 20px;
+                width: 55px;
+                height: 55px;
             }
 
-            .volume-slider {
-                width: 60px;
+            .music-icon {
+                font-size: 22px;
             }
         }
 
@@ -747,33 +608,14 @@
             }
 
             .music-player {
-                padding: 15px 18px;
+                width: 50px;
+                height: 50px;
+                top: 15px;
+                right: 15px;
             }
 
-            .play-button {
-                width: 40px;
-                height: 40px;
-            }
-
-            .play-button i {
-                font-size: 1rem;
-            }
-
-            .player-title {
-                font-size: 0.85rem;
-                margin-bottom: 12px;
-            }
-
-            .volume-control {
-                display: none;
-            }
-
-            .progress-container {
-                gap: 6px;
-            }
-
-            .time-display {
-                font-size: 0.7rem;
+            .music-icon {
+                font-size: 20px;
             }
         }
 
@@ -798,6 +640,15 @@
     </style>
 </head>
 <body>
+    <!-- Music Player -->
+    <div class="music-player" id="musicPlayer">
+        <i class="fa-solid fa-play music-icon" id="musicIcon"></i>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="friendsgiving-song.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="container">
         <div class="corner-flourish top-left"></div>
         <div class="corner-flourish bottom-right"></div>
@@ -820,39 +671,6 @@
                 <div class="info-block">
                     <div class="location">Lakeside Landing Patio</div>
                     <div class="location-detail">Elyson Community</div>
-                </div>
-
-                <!-- Music Player -->
-                <div class="music-player">
-                    <div class="player-title">
-                        <i class="fa-solid fa-music"></i>
-                        Friendsgiving Vibes
-                        <span id="debugStatus" style="font-size: 0.7rem; margin-left: auto; opacity: 0.6;"></span>
-                    </div>
-                    <div class="player-controls">
-                        <button class="play-button" id="playButton" aria-label="Play music">
-                            <i class="fa-solid fa-play"></i>
-                        </button>
-                        <div class="progress-container">
-                            <div class="progress-bar" id="progressBar">
-                                <div class="progress-fill" id="progressFill"></div>
-                            </div>
-                            <div class="time-display">
-                                <span id="currentTime">0:00</span>
-                                <span id="duration">0:00</span>
-                            </div>
-                        </div>
-                        <div class="volume-control">
-                            <button class="volume-button" id="volumeButton" aria-label="Mute/Unmute">
-                                <i class="fa-solid fa-volume-high"></i>
-                            </button>
-                            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
-                        </div>
-                    </div>
-                    <audio id="audioPlayer" preload="metadata" playsinline>
-                        <source src="friendsgiving-song.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
                 </div>
             </div>
 
@@ -948,271 +766,24 @@
     </div>
 
     <script>
-        // Music Player Functionality
-        const audioPlayer = document.getElementById('audioPlayer');
-        const playButton = document.getElementById('playButton');
-        const playIcon = playButton.querySelector('i');
-        const progressBar = document.getElementById('progressBar');
-        const progressFill = document.getElementById('progressFill');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationEl = document.getElementById('duration');
-        const volumeButton = document.getElementById('volumeButton');
-        const volumeIcon = volumeButton ? volumeButton.querySelector('i') : null;
-        const volumeSlider = document.getElementById('volumeSlider');
-        const debugStatus = document.getElementById('debugStatus');
+        // Music Player - Simple Toggle
+        const musicPlayer = document.getElementById('musicPlayer');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        let isPlaying = false;
 
-        let isAudioLoaded = false;
-        let hasInteracted = false;
-        let audioContext = null;
-
-        // Debug helper
-        function setDebug(msg) {
-            if (debugStatus) {
-                debugStatus.textContent = msg;
-                console.log('Audio Debug:', msg);
-            }
-        }
-
-        // Detect browser
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-        setDebug(isIOS ? 'iOS' : isSafari ? 'Safari' : 'Other');
-
-        // Set initial volume (if supported)
-        try {
-            audioPlayer.volume = 0.7;
-        } catch (e) {
-            setDebug('No volume ctrl');
-            console.log('Volume control not supported on this device');
-        }
-
-        // Format time helper
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds) || !isFinite(seconds)) {
-                return '0:00';
-            }
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // Initialize audio on first user interaction (required for iOS)
-        function initAudio() {
-            if (!hasInteracted) {
-                hasInteracted = true;
-                setDebug('Loading...');
-
-                // Create AudioContext for iOS (helps unlock audio)
-                if (isIOS && !audioContext) {
-                    try {
-                        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                        audioContext.resume();
-                    } catch (e) {
-                        console.log('AudioContext not available:', e);
-                    }
-                }
-
-                audioPlayer.load();
-            }
-        }
-
-        // Play/Pause toggle with mobile support
-        async function togglePlayPause() {
-            try {
-                initAudio();
-
-                // Resume AudioContext if suspended (iOS fix)
-                if (audioContext && audioContext.state === 'suspended') {
-                    await audioContext.resume();
-                }
-
-                if (audioPlayer.paused) {
-                    setDebug('Playing...');
-
-                    // iOS Safari workaround: ensure audio is loaded
-                    if (audioPlayer.readyState < 2) {
-                        audioPlayer.load();
-                        await new Promise(resolve => {
-                            audioPlayer.addEventListener('canplay', resolve, { once: true });
-                            setTimeout(resolve, 2000); // timeout after 2 seconds
-                        });
-                    }
-
-                    const playPromise = audioPlayer.play();
-
-                    if (playPromise !== undefined) {
-                        playPromise.then(() => {
-                            setDebug('▶');
-                            playIcon.classList.remove('fa-play');
-                            playIcon.classList.add('fa-pause');
-                            playButton.classList.add('playing');
-                        }).catch((error) => {
-                            console.error('Playback failed:', error);
-                            setDebug('Error: ' + error.name);
-                            // Reset button state
-                            playIcon.classList.remove('fa-pause');
-                            playIcon.classList.add('fa-play');
-                            playButton.classList.remove('playing');
-                        });
-                    }
-                } else {
-                    audioPlayer.pause();
-                    setDebug('❚❚');
-                    playIcon.classList.remove('fa-pause');
-                    playIcon.classList.add('fa-play');
-                    playButton.classList.remove('playing');
-                }
-            } catch (error) {
-                console.error('Audio error:', error);
-                setDebug('Error: ' + error.message);
-            }
-        }
-
-        // Add both click and touchstart for better mobile support
-        playButton.addEventListener('click', togglePlayPause);
-        playButton.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            togglePlayPause();
-        }, { passive: false });
-
-        // Update duration when metadata loads
-        audioPlayer.addEventListener('loadedmetadata', () => {
-            isAudioLoaded = true;
-            durationEl.textContent = formatTime(audioPlayer.duration);
-            setDebug('Ready ✓');
-        });
-
-        // Alternative: if metadata doesn't load, try on canplay
-        audioPlayer.addEventListener('canplay', () => {
-            if (!isAudioLoaded && audioPlayer.duration) {
-                isAudioLoaded = true;
-                durationEl.textContent = formatTime(audioPlayer.duration);
-                setDebug('Ready ✓');
-            }
-        });
-
-        audioPlayer.addEventListener('loadstart', () => {
-            setDebug('Loading...');
-        });
-
-        audioPlayer.addEventListener('waiting', () => {
-            setDebug('Buffering...');
-        });
-
-        audioPlayer.addEventListener('playing', () => {
-            setDebug('▶');
-        });
-
-        audioPlayer.addEventListener('pause', () => {
-            setDebug('❚❚');
-        });
-
-        // Update progress bar and time
-        audioPlayer.addEventListener('timeupdate', () => {
-            if (audioPlayer.duration && isFinite(audioPlayer.duration)) {
-                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                progressFill.style.width = `${progress}%`;
-                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
-            }
-        });
-
-        // Seek functionality with touch support
-        function handleSeek(e) {
-            initAudio();
-            const rect = progressBar.getBoundingClientRect();
-            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            const percent = (clientX - rect.left) / rect.width;
-
-            if (isAudioLoaded && audioPlayer.duration && isFinite(audioPlayer.duration)) {
-                audioPlayer.currentTime = Math.max(0, Math.min(percent * audioPlayer.duration, audioPlayer.duration));
-            }
-        }
-
-        progressBar.addEventListener('click', handleSeek);
-        progressBar.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            handleSeek(e);
-        }, { passive: false });
-
-        // Volume control (if available)
-        if (volumeSlider) {
-            volumeSlider.addEventListener('input', (e) => {
-                try {
-                    const volume = e.target.value / 100;
-                    audioPlayer.volume = volume;
-                    if (volumeIcon) {
-                        updateVolumeIcon(volume);
-                    }
-                } catch (e) {
-                    console.log('Volume control not supported');
-                }
-            });
-        }
-
-        if (volumeButton) {
-            volumeButton.addEventListener('click', () => {
-                try {
-                    if (audioPlayer.volume > 0) {
-                        audioPlayer.dataset.prevVolume = audioPlayer.volume;
-                        audioPlayer.volume = 0;
-                        volumeSlider.value = 0;
-                        updateVolumeIcon(0);
-                    } else {
-                        const prevVolume = audioPlayer.dataset.prevVolume || 0.7;
-                        audioPlayer.volume = prevVolume;
-                        volumeSlider.value = prevVolume * 100;
-                        updateVolumeIcon(prevVolume);
-                    }
-                } catch (e) {
-                    console.log('Volume control not supported');
-                }
-            });
-        }
-
-        function updateVolumeIcon(volume) {
-            if (!volumeIcon) return;
-            volumeIcon.classList.remove('fa-volume-high', 'fa-volume-low', 'fa-volume-xmark');
-            if (volume === 0) {
-                volumeIcon.classList.add('fa-volume-xmark');
-            } else if (volume < 0.5) {
-                volumeIcon.classList.add('fa-volume-low');
+        musicPlayer.addEventListener('click', () => {
+            if (isPlaying) {
+                backgroundMusic.pause();
+                musicIcon.classList.remove('fa-pause', 'playing');
+                musicIcon.classList.add('fa-play');
             } else {
-                volumeIcon.classList.add('fa-volume-high');
+                backgroundMusic.play();
+                musicIcon.classList.remove('fa-play');
+                musicIcon.classList.add('fa-pause', 'playing');
             }
-        }
-
-        // Reset play button when song ends
-        audioPlayer.addEventListener('ended', () => {
-            playIcon.classList.remove('fa-pause');
-            playIcon.classList.add('fa-play');
-            playButton.classList.remove('playing');
-            progressFill.style.width = '0%';
-            audioPlayer.currentTime = 0;
+            isPlaying = !isPlaying;
         });
-
-        // Handle audio errors
-        audioPlayer.addEventListener('error', (e) => {
-            const error = audioPlayer.error;
-            let errorMsg = 'Error';
-            if (error) {
-                switch(error.code) {
-                    case 1: errorMsg = 'Aborted'; break;
-                    case 2: errorMsg = 'Network error'; break;
-                    case 3: errorMsg = 'Decode error'; break;
-                    case 4: errorMsg = 'Not supported'; break;
-                }
-            }
-            console.error('Audio loading error:', e, error);
-            setDebug(errorMsg);
-            playIcon.classList.remove('fa-pause');
-            playIcon.classList.add('fa-play');
-            playButton.classList.remove('playing');
-        });
-
-        // Pre-initialize audio on page interaction (helps with iOS)
-        document.addEventListener('touchstart', initAudio, { once: true, passive: true });
-        document.addEventListener('click', initAudio, { once: true, passive: true });
     </script>
 </body>
 </html>
