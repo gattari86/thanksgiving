@@ -827,6 +827,7 @@
                     <div class="player-title">
                         <i class="fa-solid fa-music"></i>
                         Friendsgiving Vibes
+                        <span id="debugStatus" style="font-size: 0.7rem; margin-left: auto; opacity: 0.6;"></span>
                     </div>
                     <div class="player-controls">
                         <button class="play-button" id="playButton" aria-label="Play music">
@@ -958,14 +959,31 @@
         const volumeButton = document.getElementById('volumeButton');
         const volumeIcon = volumeButton ? volumeButton.querySelector('i') : null;
         const volumeSlider = document.getElementById('volumeSlider');
+        const debugStatus = document.getElementById('debugStatus');
 
         let isAudioLoaded = false;
         let hasInteracted = false;
+        let audioContext = null;
+
+        // Debug helper
+        function setDebug(msg) {
+            if (debugStatus) {
+                debugStatus.textContent = msg;
+                console.log('Audio Debug:', msg);
+            }
+        }
+
+        // Detect browser
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+        setDebug(isIOS ? 'iOS' : isSafari ? 'Safari' : 'Other');
 
         // Set initial volume (if supported)
         try {
             audioPlayer.volume = 0.7;
         } catch (e) {
+            setDebug('No volume ctrl');
             console.log('Volume control not supported on this device');
         }
 
@@ -983,6 +1001,18 @@
         function initAudio() {
             if (!hasInteracted) {
                 hasInteracted = true;
+                setDebug('Loading...');
+
+                // Create AudioContext for iOS (helps unlock audio)
+                if (isIOS && !audioContext) {
+                    try {
+                        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        audioContext.resume();
+                    } catch (e) {
+                        console.log('AudioContext not available:', e);
+                    }
+                }
+
                 audioPlayer.load();
             }
         }
@@ -992,16 +1022,34 @@
             try {
                 initAudio();
 
+                // Resume AudioContext if suspended (iOS fix)
+                if (audioContext && audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+
                 if (audioPlayer.paused) {
+                    setDebug('Playing...');
+
+                    // iOS Safari workaround: ensure audio is loaded
+                    if (audioPlayer.readyState < 2) {
+                        audioPlayer.load();
+                        await new Promise(resolve => {
+                            audioPlayer.addEventListener('canplay', resolve, { once: true });
+                            setTimeout(resolve, 2000); // timeout after 2 seconds
+                        });
+                    }
+
                     const playPromise = audioPlayer.play();
 
                     if (playPromise !== undefined) {
                         playPromise.then(() => {
+                            setDebug('▶');
                             playIcon.classList.remove('fa-play');
                             playIcon.classList.add('fa-pause');
                             playButton.classList.add('playing');
                         }).catch((error) => {
                             console.error('Playback failed:', error);
+                            setDebug('Error: ' + error.name);
                             // Reset button state
                             playIcon.classList.remove('fa-pause');
                             playIcon.classList.add('fa-play');
@@ -1010,12 +1058,14 @@
                     }
                 } else {
                     audioPlayer.pause();
+                    setDebug('❚❚');
                     playIcon.classList.remove('fa-pause');
                     playIcon.classList.add('fa-play');
                     playButton.classList.remove('playing');
                 }
             } catch (error) {
                 console.error('Audio error:', error);
+                setDebug('Error: ' + error.message);
             }
         }
 
@@ -1030,6 +1080,7 @@
         audioPlayer.addEventListener('loadedmetadata', () => {
             isAudioLoaded = true;
             durationEl.textContent = formatTime(audioPlayer.duration);
+            setDebug('Ready ✓');
         });
 
         // Alternative: if metadata doesn't load, try on canplay
@@ -1037,7 +1088,24 @@
             if (!isAudioLoaded && audioPlayer.duration) {
                 isAudioLoaded = true;
                 durationEl.textContent = formatTime(audioPlayer.duration);
+                setDebug('Ready ✓');
             }
+        });
+
+        audioPlayer.addEventListener('loadstart', () => {
+            setDebug('Loading...');
+        });
+
+        audioPlayer.addEventListener('waiting', () => {
+            setDebug('Buffering...');
+        });
+
+        audioPlayer.addEventListener('playing', () => {
+            setDebug('▶');
+        });
+
+        audioPlayer.addEventListener('pause', () => {
+            setDebug('❚❚');
         });
 
         // Update progress bar and time
@@ -1125,7 +1193,18 @@
 
         // Handle audio errors
         audioPlayer.addEventListener('error', (e) => {
-            console.error('Audio loading error:', e);
+            const error = audioPlayer.error;
+            let errorMsg = 'Error';
+            if (error) {
+                switch(error.code) {
+                    case 1: errorMsg = 'Aborted'; break;
+                    case 2: errorMsg = 'Network error'; break;
+                    case 3: errorMsg = 'Decode error'; break;
+                    case 4: errorMsg = 'Not supported'; break;
+                }
+            }
+            console.error('Audio loading error:', e, error);
+            setDebug(errorMsg);
             playIcon.classList.remove('fa-pause');
             playIcon.classList.add('fa-play');
             playButton.classList.remove('playing');
