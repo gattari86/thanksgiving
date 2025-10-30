@@ -848,7 +848,7 @@
                             <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
                         </div>
                     </div>
-                    <audio id="audioPlayer" preload="metadata">
+                    <audio id="audioPlayer" preload="metadata" playsinline>
                         <source src="friendsgiving-song.mp3" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
@@ -956,75 +956,154 @@
         const currentTimeEl = document.getElementById('currentTime');
         const durationEl = document.getElementById('duration');
         const volumeButton = document.getElementById('volumeButton');
-        const volumeIcon = volumeButton.querySelector('i');
+        const volumeIcon = volumeButton ? volumeButton.querySelector('i') : null;
         const volumeSlider = document.getElementById('volumeSlider');
 
-        // Set initial volume
-        audioPlayer.volume = 0.7;
+        let isAudioLoaded = false;
+        let hasInteracted = false;
+
+        // Set initial volume (if supported)
+        try {
+            audioPlayer.volume = 0.7;
+        } catch (e) {
+            console.log('Volume control not supported on this device');
+        }
 
         // Format time helper
         function formatTime(seconds) {
+            if (!seconds || isNaN(seconds) || !isFinite(seconds)) {
+                return '0:00';
+            }
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // Play/Pause toggle
-        playButton.addEventListener('click', () => {
-            if (audioPlayer.paused) {
-                audioPlayer.play();
-                playIcon.classList.remove('fa-play');
-                playIcon.classList.add('fa-pause');
-                playButton.classList.add('playing');
-            } else {
-                audioPlayer.pause();
-                playIcon.classList.remove('fa-pause');
-                playIcon.classList.add('fa-play');
-                playButton.classList.remove('playing');
+        // Initialize audio on first user interaction (required for iOS)
+        function initAudio() {
+            if (!hasInteracted) {
+                hasInteracted = true;
+                audioPlayer.load();
             }
-        });
+        }
+
+        // Play/Pause toggle with mobile support
+        async function togglePlayPause() {
+            try {
+                initAudio();
+
+                if (audioPlayer.paused) {
+                    const playPromise = audioPlayer.play();
+
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            playIcon.classList.remove('fa-play');
+                            playIcon.classList.add('fa-pause');
+                            playButton.classList.add('playing');
+                        }).catch((error) => {
+                            console.error('Playback failed:', error);
+                            // Reset button state
+                            playIcon.classList.remove('fa-pause');
+                            playIcon.classList.add('fa-play');
+                            playButton.classList.remove('playing');
+                        });
+                    }
+                } else {
+                    audioPlayer.pause();
+                    playIcon.classList.remove('fa-pause');
+                    playIcon.classList.add('fa-play');
+                    playButton.classList.remove('playing');
+                }
+            } catch (error) {
+                console.error('Audio error:', error);
+            }
+        }
+
+        // Add both click and touchstart for better mobile support
+        playButton.addEventListener('click', togglePlayPause);
+        playButton.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            togglePlayPause();
+        }, { passive: false });
 
         // Update duration when metadata loads
         audioPlayer.addEventListener('loadedmetadata', () => {
+            isAudioLoaded = true;
             durationEl.textContent = formatTime(audioPlayer.duration);
+        });
+
+        // Alternative: if metadata doesn't load, try on canplay
+        audioPlayer.addEventListener('canplay', () => {
+            if (!isAudioLoaded && audioPlayer.duration) {
+                isAudioLoaded = true;
+                durationEl.textContent = formatTime(audioPlayer.duration);
+            }
         });
 
         // Update progress bar and time
         audioPlayer.addEventListener('timeupdate', () => {
-            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-            progressFill.style.width = `${progress}%`;
-            currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
-        });
-
-        // Seek functionality
-        progressBar.addEventListener('click', (e) => {
-            const rect = progressBar.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            audioPlayer.currentTime = percent * audioPlayer.duration;
-        });
-
-        // Volume control
-        volumeSlider.addEventListener('input', (e) => {
-            const volume = e.target.value / 100;
-            audioPlayer.volume = volume;
-            updateVolumeIcon(volume);
-        });
-
-        volumeButton.addEventListener('click', () => {
-            if (audioPlayer.volume > 0) {
-                audioPlayer.dataset.prevVolume = audioPlayer.volume;
-                audioPlayer.volume = 0;
-                volumeSlider.value = 0;
-                updateVolumeIcon(0);
-            } else {
-                const prevVolume = audioPlayer.dataset.prevVolume || 0.7;
-                audioPlayer.volume = prevVolume;
-                volumeSlider.value = prevVolume * 100;
-                updateVolumeIcon(prevVolume);
+            if (audioPlayer.duration && isFinite(audioPlayer.duration)) {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressFill.style.width = `${progress}%`;
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
             }
         });
 
+        // Seek functionality with touch support
+        function handleSeek(e) {
+            initAudio();
+            const rect = progressBar.getBoundingClientRect();
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const percent = (clientX - rect.left) / rect.width;
+
+            if (isAudioLoaded && audioPlayer.duration && isFinite(audioPlayer.duration)) {
+                audioPlayer.currentTime = Math.max(0, Math.min(percent * audioPlayer.duration, audioPlayer.duration));
+            }
+        }
+
+        progressBar.addEventListener('click', handleSeek);
+        progressBar.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleSeek(e);
+        }, { passive: false });
+
+        // Volume control (if available)
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                try {
+                    const volume = e.target.value / 100;
+                    audioPlayer.volume = volume;
+                    if (volumeIcon) {
+                        updateVolumeIcon(volume);
+                    }
+                } catch (e) {
+                    console.log('Volume control not supported');
+                }
+            });
+        }
+
+        if (volumeButton) {
+            volumeButton.addEventListener('click', () => {
+                try {
+                    if (audioPlayer.volume > 0) {
+                        audioPlayer.dataset.prevVolume = audioPlayer.volume;
+                        audioPlayer.volume = 0;
+                        volumeSlider.value = 0;
+                        updateVolumeIcon(0);
+                    } else {
+                        const prevVolume = audioPlayer.dataset.prevVolume || 0.7;
+                        audioPlayer.volume = prevVolume;
+                        volumeSlider.value = prevVolume * 100;
+                        updateVolumeIcon(prevVolume);
+                    }
+                } catch (e) {
+                    console.log('Volume control not supported');
+                }
+            });
+        }
+
         function updateVolumeIcon(volume) {
+            if (!volumeIcon) return;
             volumeIcon.classList.remove('fa-volume-high', 'fa-volume-low', 'fa-volume-xmark');
             if (volume === 0) {
                 volumeIcon.classList.add('fa-volume-xmark');
@@ -1043,6 +1122,18 @@
             progressFill.style.width = '0%';
             audioPlayer.currentTime = 0;
         });
+
+        // Handle audio errors
+        audioPlayer.addEventListener('error', (e) => {
+            console.error('Audio loading error:', e);
+            playIcon.classList.remove('fa-pause');
+            playIcon.classList.add('fa-play');
+            playButton.classList.remove('playing');
+        });
+
+        // Pre-initialize audio on page interaction (helps with iOS)
+        document.addEventListener('touchstart', initAudio, { once: true, passive: true });
+        document.addEventListener('click', initAudio, { once: true, passive: true });
     </script>
 </body>
 </html>
