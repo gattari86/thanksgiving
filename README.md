@@ -3,7 +3,7 @@
 A beautiful, animated digital invitation for Friendsgiving 2025.
 
 ## Event Details
-- **Date:** Saturday, November 16, 2025
+- **Date:** Sunday, November 16, 2025
 - **Location:** Lakeside Landing Patio, Elyson Community
 - **Time:** 12:00 PM - 3:30 PM
 
